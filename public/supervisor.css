@@ -1,0 +1,310 @@
+
+/* =ORDER
+ 1. display
+ 2. float and position
+ 3. width and height
+ 4. Specific element properties
+ 5. margin
+ 6. border
+ 7. padding
+ 8. background
+ 9. color
+10. font related properties
+----------------------------------------------- */
+
+/* =MAIN
+----------------------------------------------- */
+body,
+td,
+input,
+select,
+textarea {
+  font: 12px arial, helvetica, verdana, sans-serif;
+  color: #333;
+}
+html,
+body,
+form,
+fieldset,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+pre,
+blockquote,
+ul,
+ol,
+dl,
+address {
+  margin: 0;
+  padding: 0;
+}
+form label {
+  cursor: pointer;
+}
+fieldset {
+  border: none;
+}
+img,
+table {
+  border-width: 0;
+}
+
+/* =COLORS
+----------------------------------------------- */
+body {
+  background-color: #fff;
+  color: #333;
+  box-shadow: 3px 4px 6px 0px rgba(0, 0, 0, 0.17);
+  border-radius: 0.75rem;
+}
+a:link,
+a:visited,
+a {
+  /* color: #333; */
+  text-decoration: none;
+  display:  inline-block;
+  font-size: 14px;
+}
+a:hover {
+  /* color: #000; */
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+}
+
+/* =FLOATS
+----------------------------------------------- */
+.left {
+  float: left;
+}
+.right {
+  text-align: right;
+  float: right;
+}
+/* clear float */
+.clr:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+.clr {
+  display: inline-block;
+}
+/* Hides from IE-mac \*/
+* html .clr {
+  height: 1%;
+}
+.clr {
+  display: block;
+}
+/* End hide from IE-mac */
+
+/* =LAYOUT
+----------------------------------------------- */
+html,
+body {
+ /* height:100% */
+  font-size: 18px;
+}
+#wrapper {
+  /* min-height: 100%;
+  height: auto !important;
+  height: 100%; */
+  /* width: 850px; */
+  /* margin: 0 auto -31px; */
+  padding: 1.25rem;
+}
+#footer,
+.push {
+  height: 30px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* =STATUS
+----------------------------------------------- */
+#header {
+  display: none;
+  margin-bottom: 13px;
+  padding: 10px 0 13px 0;
+  background: url("../images/rule.gif") left bottom repeat-x;
+}
+.status_msg {
+  padding: 5px 10px;
+  border: 1px solid #919191;
+  background-color: #fbfbfb;
+  color: #000000;
+}
+
+#buttons {
+  margin: 13px 0;
+}
+#buttons li {
+  float: left;
+  display: block;
+  margin: 0 7px 0 0;
+}
+#buttons a {
+  /* float: left; */
+  display: block;
+  text-align: center;
+  padding: 1px 0 0 0;
+}
+#buttons a,
+#buttons a:link {
+  text-decoration: none;
+}
+
+.action-button {
+  /* border: 1px solid #919191;
+  text-transform: uppercase;
+  padding: 0 5px;
+  border-radius: 4px;
+  color: #50504d;
+  font-size: 12px;
+  background: #fbfbfb;
+  font-weight: 600; */
+  width: 6.25rem;
+  background: #004eff;
+  border: 1px solid #004eff;
+  padding: 0;
+  line-height: 40px;
+  border-radius: 4px;
+}
+
+.action-button a {
+  color: #fff;
+}
+.action-button:hover {
+  /* border: 1px solid #88b0f2; */
+  /* background: #ffffff; */
+}
+.clr .action-button:last-child {
+  background: #d4000a;
+  border-color: #d4000a;
+}
+table {
+  width: 100%;
+  border: 1px solid #e6e6e6;
+  border-radius: 0.375rem;
+  margin-top: 1.25rem;
+  overflow: hidden;
+}
+th {
+  background-color: #fafafa;
+  color: #666;
+  text-align: center;
+}
+th.state {
+  text-align: center;
+  width: 44px;
+}
+th.desc {
+  width: 200px;
+  height:59px;
+  overflow:hidden;
+  white-space: nowrap;
+  text-overflow:ellipsis;
+}
+th.name {
+  width: 200px;
+}
+th.action {
+}
+td,
+th {
+  padding: 4px 8px;
+  border-bottom: 1px solid #fff;
+  line-height: 59px;
+  font-size: 18px;
+}
+tr td {
+  background-color: #fbfbfb;
+  color: #666;
+  text-align: center;
+}
+tr.shade td {
+  background-color: #f0f0f0;
+}
+.action ul {
+  list-style: none;
+  display: inline;
+}
+.action li {
+  margin-right: 10px;
+  display: inline;
+}
+.action li a {
+  width: 5.5rem;
+  line-height: 1.75rem;
+  border-radius: 0.375rem;
+  background: #fff;
+  /* border-color: #004eff; */
+  padding: 0;
+  color: #004eff;
+  border: 1px solid #004eff;
+  text-align: center;
+}
+.action li:nth-child(2) a,
+.action li:nth-child(3) a {
+  /* color: #004eff; */
+  color: #d4000a;
+  border: 1px solid #d4000a;
+}
+/* status message */
+.status span {
+  display: block;
+  width: 60px;
+  height: 26px;
+  border: 1px solid #fff;
+  text-align: center;
+  font-size: 95%;
+  line-height: 26px;
+  padding: 3px;
+}
+.statusnominal {
+  background-size: 100% 100%;
+  background-image: url("../images/state0.gif");
+  background-repeat: no-repeat;
+}
+.statusrunning {
+  background-image: url("../images/state2.gif");
+}
+.statuserror {
+  background-image: url("../images/state3.gif");
+}
+
+tr td:nth-child(2) span{
+  display:block;
+  width:200px;
+  height:26px;
+  line-height:26px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+#footer {
+  display: none;
+  width: 760px;
+  margin: 0 auto;
+  padding: 0 10px;
+  line-height: 30px;
+  border: 1px solid #c8c8c2;
+  border-bottom-width: 0;
+  background-color: #fbfbfb;
+  overflow: hidden;
+  opacity: 0.7;
+  color: #000;
+  font-size: 95%;
+}
+#footer a {
+  font-size: inherit;
+}
