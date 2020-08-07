@@ -35,7 +35,13 @@ export default {
   name: "Home",
   components: {
     Wavesurfer,
-    elPage
+    elPage,
+  },
+  created() {
+    const array = [1, 2, 3, 4, 5, 6];
+    array.map((item) => {
+      console.log(item);
+    });
   },
   computed: {
     pageCount() {
@@ -49,7 +55,7 @@ export default {
     startPage() {
       //每组起始页
       return this.nowZu * this.pageCount + 1;
-    }
+    },
   },
   methods: {
     pageChange(newPage) {
@@ -66,7 +72,7 @@ export default {
         return;
       }
       this.nowZu--;
-     this.currentPage = this.nowZu * this.pageCount + 1;
+      this.currentPage = this.nowZu * this.pageCount + 1;
     },
     nextTip() {
       if (this.zongshu / this.zushu < this.nowZu + 2) {
@@ -85,7 +91,7 @@ export default {
       //   console.log(element);
 
       // }
-    }
+    },
   },
   data() {
     return {
@@ -94,8 +100,8 @@ export default {
       value: 10, //一页多少条
       zushu: 100, //一组总条数
       nowZu: 0, //组数
-      pagerCount: 5 //组件显示几页
+      pagerCount: 5, //组件显示几页
     };
-  }
+  },
 };
 </script>
