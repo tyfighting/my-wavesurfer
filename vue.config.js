@@ -34,10 +34,6 @@ module.exports = {
       .set('assets', resolve('src/assets'))
       .set('components', resolve('src/components')),
     config.plugin('html')
-        .tap(args => {
-          args[0].title = 'IPLUS文本分析系统';
-          return args;
-        })
   },
   devServer: {
     // before: function(app, server) {
