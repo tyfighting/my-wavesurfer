@@ -50,7 +50,7 @@ export default {
     },
     pageTotal() {
       //总页数
-      return Math.ceil(this.zongshu / this.value);
+      return this.pageCount * (this.zongshu / this.zushu);
     },
     startPage() {
       //每组起始页
@@ -66,7 +66,7 @@ export default {
     getValidCurrentPage(value) {
       value = parseInt(value, 10);
 
-      const havePageCount = typeof this.internalPageCount === 'number';
+      const havePageCount = typeof this.internalPageCount === "number";
 
       let resetValue;
       if (!havePageCount) {
@@ -105,7 +105,7 @@ export default {
         return;
       }
       this.nowZu++;
-      console.log('当前组数：'+this.nowZu);
+      console.log("当前组数：" + this.nowZu);
       this.currentPage = this.nowZu * this.pageCount + 1;
       // console.log(this.currentPage);
     },
@@ -114,12 +114,12 @@ export default {
     return {
       currentPage: 1, //当前页
       currentPage1: 1,
-      zongshu: 1000, //总台数
+      zongshu: 1000, //总条数
       value: 10, //一页多少条
       zushu: 100, //一组总条数
       nowZu: 0, //组数
       pagerCount: 7, //组件显示几页
-      internalCurrentPage:1
+      internalCurrentPage: 1,
     };
   },
 };
