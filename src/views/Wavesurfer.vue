@@ -34,23 +34,30 @@ export default {
       leftChannle: [
         { start: 10, end: 20 },
         { start: 40, end: 50 },
-        { start: 90, end: 100 }
+        { start: 90, end: 100 },
       ],
       rightChannle: [
         { start: 30, end: 40 },
         { start: 60, end: 70 },
-        { start: 100, end: 120 }
+        { start: 100, end: 120 },
       ],
       leftFlag: 0, //左声道播放到第几个
       rightFlag: 0, //右声道播放到第几个
-      type: 0
+      type: 0,
     };
+  },
+  created() {
+    // fetch("/audio/lesson/shi0529/0008/8163/rule1.mp3", {
+    //   mode: "no-cors",
+    // }).then((res) => {
+    //   console.log(res);
+    // });
   },
   mounted() {
     this.initWavesurfer();
   },
   methods: {
-    initWavesurfer() {
+    async initWavesurfer() {
       this.wavesurfer = WaveSurfer.create({
         container: this.$refs.wavesurfer,
         waveColor: "violet",
@@ -58,15 +65,18 @@ export default {
         plugins: [
           // 光标插件
           Regions.create({
-            container: "#region"
+            container: "#region",
           }),
           // 时间轴插件
           Timeline.create({
-            container: "#timeline"
-          })
-        ]
+            container: "#timeline",
+          }),
+        ],
       });
-      this.wavesurfer.load(this.publicPath + "video/demo.mp3");
+      // this.wavesurfer.load(this.publicPath + "video/demo.mp3");
+      // const res = await fetch("/audio/lesson/shi0529/0008/8163/rule1.mp3" );
+      // console.log(res);
+      this.wavesurfer.load("/audio/lesson/shi0529/0008/8163/rule2.mp3");
       this.wavesurfer.on("ready", () => {
         this.loading = false;
         this.wavesurfer.addRegion({
@@ -76,10 +86,10 @@ export default {
           loop: false,
           drag: false,
           resize: true,
-          color: "rgba(254, 255, 255, 0.4)"
+          color: "rgba(254, 255, 255, 0.4)",
         });
       });
-      this.wavesurfer.on("audioprocess", value => {
+      this.wavesurfer.on("audioprocess", (value) => {
         this.currentTime = parseInt(value);
         if (this.type === 1) {
           if (this.currentTime == this.leftChannle[this.leftFlag]["end"]) {
@@ -123,8 +133,8 @@ export default {
         this.currentTime = start;
         this.wavesurfer.play(start);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

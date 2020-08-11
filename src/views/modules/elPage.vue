@@ -53,20 +53,16 @@ export default {
     total: Number,
     options: Array,
     startPage: Number,
-    nowZu: Number
+    nowZu: Number,
   },
 
   watch: {
     showPrevMore(val) {
       if (!val) this.quickprevIconClass = "el-icon-more";
     },
-    currentPage(val) {
-      console.log(val);
-      console.log(this.pagers);
-    },
     showNextMore(val) {
       if (!val) this.quicknextIconClass = "el-icon-more";
-    }
+    },
   },
 
   methods: {
@@ -81,13 +77,23 @@ export default {
       const currentPage = this.currentPage;
       const pagerCountOffset = this.pagerCount - 2;
 
+      console.log("newPage" + newPage);
+      console.log("pageCount" + pageCount);
+      console.log("currentPage" + currentPage);
+      console.log("pagerCountOffset" + pagerCountOffset);
       if (target.className.indexOf("more") !== -1) {
+        console.log(1);
         if (target.className.indexOf("quickprev") !== -1) {
+          console.log(2);
           newPage = currentPage - pagerCountOffset;
+          // const pageCount = Number(this.pageCount);
         } else if (target.className.indexOf("quicknext") !== -1) {
+          console.log(3);
           newPage = currentPage + pagerCountOffset;
         }
       }
+
+      console.log(newPage, pageCount, currentPage, pagerCountOffset);
 
       /* istanbul ignore if */
       if (!isNaN(newPage)) {
@@ -95,8 +101,8 @@ export default {
           newPage = 1;
         }
 
-        if (newPage > pageCount) {
-          newPage = pageCount;
+        if (newPage > pageCount + this.$parent.nowZu * this.$parent.pageCount) {
+          newPage = pageCount+ this.$parent.nowZu * this.$parent.pageCount;
         }
       }
       console.log("newPage" + newPage);
@@ -112,7 +118,7 @@ export default {
       } else {
         this.quicknextIconClass = "el-icon-d-arrow-right";
       }
-    }
+    },
   },
 
   computed: {
@@ -124,53 +130,70 @@ export default {
       const halfPagerCount = (pagerCount - 1) / 2;
 
       const currentPage = Number(this.currentPage);
-      // const currentPage = Number(
-      //   this.$parent.newZu * this.$parent.zushu + this.currentPage
-      // );
       const pageCount = Number(this.pageCount);
 
       let showPrevMore = false;
       let showNextMore = false;
 
-      console.log("pageCount" + pageCount);
+      // console.log("pageCount" + pageCount);
       console.log("currentPage" + currentPage);
-console.log("endPage" + this.endPage);
+      // console.log("pagerCount" + pagerCount);
+
       if (pageCount > pagerCount) {
-        if (currentPage > this.pagerCount - halfPagerCount) {
+        const descPrev =
+          this.pagerCount +
+          this.$parent.nowZu * this.$parent.pageCount -
+          halfPagerCount;
+        const descNext =
+          pageCount -
+          halfPagerCount +
+          this.$parent.nowZu * this.$parent.pageCount;
+        if (currentPage > descPrev) {
           showPrevMore = true;
         }
-
-        if (currentPage < this.pagerCount - halfPagerCount) {
+        if (currentPage < descNext) {
           showNextMore = true;
         }
       }
 
-      const array = [];
+      let array = [];
+      console.log(showPrevMore, showNextMore);
       if (showPrevMore && !showNextMore) {
         const startPage = pageCount - (pagerCount - 2);
         for (let i = startPage; i < pageCount; i++) {
-          array.push(Number(this.$parent.nowZu * this.$parent.pageCount + i));
+          array.push(
+            Number(this.$parent.nowZu * this.$parent.pageCount + i)
+          );
         }
       } else if (!showPrevMore && showNextMore) {
         for (let i = 2; i < pagerCount; i++) {
-          array.push(Number(this.$parent.nowZu * this.$parent.pageCount + i));
+          array.push(
+            Number(this.$parent.nowZu * this.$parent.pageCount + i)
+          );
         }
       } else if (showPrevMore && showNextMore) {
         const offset = Math.floor(pagerCount / 2) - 1;
         for (let i = currentPage - offset; i <= currentPage + offset; i++) {
-          array.push(Number(this.$parent.nowZu * this.$parent.pageCount + i));
+          array.push(i);
         }
       } else {
         for (let i = 2; i < pageCount; i++) {
-          array.push(Number(this.$parent.nowZu * this.$parent.pageCount + i));
+          array.push(
+            Number(this.$parent.nowZu * this.$parent.pageCount + i)
+          );
         }
       }
 
       this.showPrevMore = showPrevMore;
       this.showNextMore = showNextMore;
+      // console.log(array);
+      // array = array.map((item) => {
+      //   return Number(this.$parent.nowZu * this.$parent.pageCount + item);
+      // });
+
       console.log(array);
       return array;
-    }
+    },
   },
   data() {
     return {
@@ -178,8 +201,8 @@ console.log("endPage" + this.endPage);
       showPrevMore: false,
       showNextMore: false,
       quicknextIconClass: "el-icon-more",
-      quickprevIconClass: "el-icon-more"
+      quickprevIconClass: "el-icon-more",
     };
-  }
+  },
 };
 </script>

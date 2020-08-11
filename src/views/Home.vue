@@ -40,7 +40,7 @@ export default {
   created() {
     const array = [1, 2, 3, 4, 5, 6];
     array.map((item) => {
-      console.log(item);
+      // console.log(item);
     });
   },
   computed: {
@@ -60,6 +60,32 @@ export default {
   methods: {
     pageChange(newPage) {
       this.currentPage = newPage;
+      // this.internalCurrentPage = this.getValidCurrentPage(newPage);
+      // console.log(this.internalCurrentPage)
+    },
+    getValidCurrentPage(value) {
+      value = parseInt(value, 10);
+
+      const havePageCount = typeof this.internalPageCount === 'number';
+
+      let resetValue;
+      if (!havePageCount) {
+        if (isNaN(value) || value < 1) resetValue = 1;
+      } else {
+        if (value < 1) {
+          resetValue = 1;
+        } else if (value > this.internalPageCount) {
+          resetValue = this.internalPageCount;
+        }
+      }
+
+      if (resetValue === undefined && isNaN(value)) {
+        resetValue = 1;
+      } else if (resetValue === 0) {
+        resetValue = 1;
+      }
+
+      return resetValue === undefined ? value : resetValue;
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
@@ -79,28 +105,21 @@ export default {
         return;
       }
       this.nowZu++;
-      console.log(this.nowZu);
+      console.log('当前组数：'+this.nowZu);
       this.currentPage = this.nowZu * this.pageCount + 1;
-      console.log(this.currentPage);
-      // this.pageTotal = 200;
-      //this.currentPage4 = 11;
-      // let data=this.$refs.elPag.$el.children[3]
-      // console.log(data);
-      // for (let index = 0; index < data.length; index++) {
-      //   const element = data[index];
-      //   console.log(element);
-
-      // }
+      // console.log(this.currentPage);
     },
   },
   data() {
     return {
       currentPage: 1, //当前页
+      currentPage1: 1,
       zongshu: 1000, //总台数
       value: 10, //一页多少条
       zushu: 100, //一组总条数
       nowZu: 0, //组数
-      pagerCount: 5, //组件显示几页
+      pagerCount: 7, //组件显示几页
+      internalCurrentPage:1
     };
   },
 };
