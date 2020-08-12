@@ -3,7 +3,7 @@
     <ul @click="onPagerClick" class="el-pager">
       <li
         :class="{ active: currentPage === startPage, disabled }"
-        v-if="pageCount > 0"
+        v-if="groupCount > 0"
         class="number"
       >
         {{ startPage }}
@@ -11,7 +11,7 @@
       <li
         class="el-icon more btn-quickprev"
         :class="[quickprevIconClass, { disabled }]"
-        v-if="showPrevMore"
+        v-if="showPrevMore && endPage !== startPage"
         @mouseenter="onMouseenter('left')"
         @mouseleave="quickprevIconClass = 'el-icon-more'"
       ></li>
@@ -26,14 +26,14 @@
       <li
         class="el-icon more btn-quicknext"
         :class="[quicknextIconClass, { disabled }]"
-        v-if="showNextMore"
+        v-if="showNextMore && endPage !== startPage"
         @mouseenter="onMouseenter('right')"
         @mouseleave="quicknextIconClass = 'el-icon-more'"
       ></li>
       <li
         :class="{ active: currentPage === endPage, disabled }"
         class="number"
-        v-if="pageCount > 1"
+        v-if="groupCount > 1 && endPage !== startPage"
       >
         {{ endPage }}
       </li>
@@ -47,13 +47,10 @@ export default {
 
   props: {
     currentPage: Number,
-    pageCount: Number,
+    groupCount: Number,
     pagerCount: Number,
     disabled: Boolean,
-    total: Number,
-    options: Array,
     startPage: Number,
-    nowZu: Number,
   },
 
   watch: {
@@ -73,12 +70,12 @@ export default {
       }
 
       let newPage = Number(event.target.textContent);
-      const pageCount = this.pageCount;
+      const groupCount = this.groupCount;
       const currentPage = this.currentPage;
       const pagerCountOffset = this.pagerCount - 2;
 
       console.log("newPage" + newPage);
-      console.log("pageCount" + pageCount);
+      console.log("groupCount" + groupCount);
       console.log("currentPage" + currentPage);
       console.log("pagerCountOffset" + pagerCountOffset);
       if (target.className.indexOf("more") !== -1) {
@@ -86,14 +83,14 @@ export default {
         if (target.className.indexOf("quickprev") !== -1) {
           console.log(2);
           newPage = currentPage - pagerCountOffset;
-          // const pageCount = Number(this.pageCount);
+          // const groupCount = Number(this.groupCount);
         } else if (target.className.indexOf("quicknext") !== -1) {
           console.log(3);
           newPage = currentPage + pagerCountOffset;
         }
       }
 
-      console.log(newPage, pageCount, currentPage, pagerCountOffset);
+      console.log(newPage, groupCount, currentPage, pagerCountOffset);
 
       /* istanbul ignore if */
       if (!isNaN(newPage)) {
@@ -101,8 +98,8 @@ export default {
           newPage = 1;
         }
 
-        if (newPage > pageCount + this.$parent.nowZu * this.$parent.pageCount) {
-          newPage = pageCount+ this.$parent.nowZu * this.$parent.pageCount;
+        if (newPage > groupCount + this.$parent.currentGroup * groupCount) {
+          newPage = groupCount + this.$parent.currentGroup * groupCount;
         }
       }
       console.log("newPage" + newPage);
@@ -123,31 +120,39 @@ export default {
 
   computed: {
     endPage() {
-      return (this.$parent.nowZu + 1) * this.$parent.pageCount;
+      let totalPage = 1;
+      if (this.$parent.totalNum > this.$parent.value) {
+        totalPage = Math.ceil(this.$parent.totalNum / this.$parent.value);
+      }
+      let end = (this.$parent.currentGroup + 1) * this.groupCount;
+      end = totalPage < end ? totalPage : end;
+      return end;
     },
     pagers() {
       const pagerCount = this.pagerCount;
       const halfPagerCount = (pagerCount - 1) / 2;
 
       const currentPage = Number(this.currentPage);
-      const pageCount = Number(this.pageCount);
-
+      let groupCount = Number(this.groupCount);
+      if (this.$parent.totalGroup - 1 === this.$parent.currentGroup) {
+        if (this.endPage % this.groupCount !== 0) {
+          groupCount = this.endPage % this.groupCount;
+        }
+      }
       let showPrevMore = false;
       let showNextMore = false;
 
-      // console.log("pageCount" + pageCount);
+      // console.log("groupCount" + groupCount);
       console.log("currentPage" + currentPage);
       // console.log("pagerCount" + pagerCount);
 
-      if (pageCount > pagerCount) {
+      if (groupCount > pagerCount) {
         const descPrev =
           this.pagerCount +
-          this.$parent.nowZu * this.$parent.pageCount -
+          this.$parent.currentGroup * groupCount -
           halfPagerCount;
         const descNext =
-          pageCount -
-          halfPagerCount +
-          this.$parent.nowZu * this.$parent.pageCount;
+          groupCount - halfPagerCount + this.$parent.currentGroup * groupCount;
         if (currentPage > descPrev) {
           showPrevMore = true;
         }
@@ -159,17 +164,13 @@ export default {
       let array = [];
       console.log(showPrevMore, showNextMore);
       if (showPrevMore && !showNextMore) {
-        const startPage = pageCount - (pagerCount - 2);
-        for (let i = startPage; i < pageCount; i++) {
-          array.push(
-            Number(this.$parent.nowZu * this.$parent.pageCount + i)
-          );
+        const startPage = groupCount - (pagerCount - 2);
+        for (let i = startPage; i < groupCount; i++) {
+          array.push(Number(this.$parent.currentGroup * this.groupCount + i));
         }
       } else if (!showPrevMore && showNextMore) {
         for (let i = 2; i < pagerCount; i++) {
-          array.push(
-            Number(this.$parent.nowZu * this.$parent.pageCount + i)
-          );
+          array.push(Number(this.$parent.currentGroup * this.groupCount + i));
         }
       } else if (showPrevMore && showNextMore) {
         const offset = Math.floor(pagerCount / 2) - 1;
@@ -177,10 +178,8 @@ export default {
           array.push(i);
         }
       } else {
-        for (let i = 2; i < pageCount; i++) {
-          array.push(
-            Number(this.$parent.nowZu * this.$parent.pageCount + i)
-          );
+        for (let i = 2; i < groupCount; i++) {
+          array.push(Number(this.$parent.currentGroup * this.groupCount + i));
         }
       }
 
@@ -188,9 +187,11 @@ export default {
       this.showNextMore = showNextMore;
       // console.log(array);
       // array = array.map((item) => {
-      //   return Number(this.$parent.nowZu * this.$parent.pageCount + item);
+      //   return Number(this.$parent.currentGroup * this.groupCount + item);
       // });
-
+      if (this.endPage === this.startPage) {
+        array = [];
+      }
       console.log(array);
       return array;
     },
