@@ -16,7 +16,7 @@
       >
       </el-option>
     </el-select>
-    <my-group-count
+    <count-total
       ref="elPag"
       :startPage="startPage"
       :currentPage="currentPage"
@@ -25,7 +25,7 @@
       :disabled="false"
       @change="pageChange"
     >
-    </my-group-count>
+    </count-total>
     <div>当前第{{ currentGroup + 1 }}组</div>
     <el-button type="primary" @click="changeGroup(-1)">上一组</el-button>
     <el-button type="primary" @click="changeGroup(1)">下一组</el-button>
@@ -33,24 +33,27 @@
 </template>
 
 <script>
-import MyGroupCount from "./modules/GroupCount";
+import CountTotal from "./CountTotal";
 export default {
   components: {
-    MyGroupCount,
+    CountTotal,
   },
   data() {
     return {
       currentPage: 1, //当前页
-      totalNum: 102, //总条数
+      totalNum: 232, //总条数
       value: 10, //一页多少条
-      groupCount: 10, //组数
-      currentGroup: 0, //当前组数
+      groupNum: 100, //一组总条数
+      currentGroup: 0, //组数
       pagerCount: 7, //组件显示几页
     };
   },
   computed: {
     totalGroup() {
-      return Math.ceil(this.totalNum / (this.value * this.groupCount));
+      return Math.ceil(this.totalNum / this.groupNum);
+    },
+    groupCount() {
+      return Math.ceil(this.groupNum / this.value);
     },
     startPage() {
       return this.groupCount * this.currentGroup + 1;
@@ -65,7 +68,6 @@ export default {
         }
         this.currentGroup--;
       } else if (value === 1) {
-        console.log(this.totalGroup, this.currentGroup);
         if (this.totalGroup < this.currentGroup + 2) {
           this.$message({ type: "warning", message: "当前组是最后一组" });
           return;
@@ -90,6 +92,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>
-

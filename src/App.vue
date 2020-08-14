@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -12,7 +12,11 @@
   text-align: center;
   color: #2c3e50;
 }
-
+html,
+body,
+#app {
+  height: 100%;
+}
 #nav {
   padding: 30px;
 
