@@ -49,7 +49,8 @@ export default {
     };
   },
   created() {
-    this.currentActive = this.$route.name;
+    const $routeName = this.$route.name;
+    this.currentActive = $routeName.includes("menu") ? "menuView" : $routeName;
   },
   methods: {
     handleSelect(key, path) {
@@ -61,14 +62,8 @@ export default {
   watch: {
     $route(value) {
       console.log(value);
-      // if (key === "menuView") {
-      //   this.$router.push({ name: "detail" });
-      // }
       this.currentActive = value.name;
     },
-  },
-  beforeRouteEnter(to, from, next) {
-    console.log(to);
   },
 };
 </script>

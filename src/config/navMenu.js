@@ -21,4 +21,8 @@ export default [
       },
     ],
   },
+  {
+    title: "音乐",
+    index: "music",
+  },
 ];
