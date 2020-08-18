@@ -3,17 +3,17 @@
 </template>
 
 <script>
-// import { content } from "@/config/music.js";
+import { content } from "@/config/music.js";
 export default {
   name: "music",
-  // data() {
-  //   return {
-  //     content: "content",
-  //   };
-  // },
-  // mounted() {
-  //   console.log(this.$router);
-  // },
+  data() {
+    return {
+      content: "content",
+    };
+  },
+  mounted() {
+    console.log(this.$router);
+  },
 };
 </script>
 
