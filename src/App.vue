@@ -29,4 +29,7 @@ body,
     }
   }
 }
+p {
+  margin: 0;
+}
 </style>

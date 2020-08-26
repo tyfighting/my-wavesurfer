@@ -1,12 +1,17 @@
 <template>
   <transition name="el-zoom-in-bottom">
     <div class="menu">
+      <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+        <el-radio-button :label="false">展开</el-radio-button>
+        <el-radio-button :label="true">收起</el-radio-button>
+      </el-radio-group>
       <el-menu
         :default-active="currentActive"
         class="el-menu-vertical-demo"
         background-color="#fff"
         text-color="#666"
         @select="handleSelect"
+        :collapse="isCollapse"
       >
         <template v-for="item in currentNavMenu">
           <el-submenu
@@ -46,6 +51,7 @@ export default {
     return {
       currentActive: "",
       currentNavMenu: navMenu,
+      isCollapse: false,
     };
   },
   created() {
@@ -71,5 +77,9 @@ export default {
 .el-menu,
 .menu {
   height: 100%;
+  /deep/.el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
+  }
 }
 </style>

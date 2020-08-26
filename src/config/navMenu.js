@@ -25,4 +25,8 @@ export default [
     title: "音乐",
     index: "music",
   },
+  {
+    title: "插槽",
+    index: "mySlot",
+  },
 ];

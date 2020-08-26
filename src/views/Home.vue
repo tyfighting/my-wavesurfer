@@ -1,9 +1,9 @@
 <template>
   <div class="home">
-    <el-col :span="4">
+    <el-col :span="3">
       <my-menu></my-menu>
     </el-col>
-    <el-col :span="20">
+    <el-col :span="21">
       <router-view></router-view>
     </el-col>
   </div>
@@ -15,12 +15,6 @@ export default {
   name: "Home",
   components: {
     myMenu,
-  },
-  created() {
-    const array = [1, 2, 3, 4, 5, 6];
-    array.map((item) => {
-      // console.log(item);
-    });
   },
 };
 </script>

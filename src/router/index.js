@@ -11,12 +11,12 @@ const routes = [
     redirect: { name: "wavesurfer" },
     children: [
       {
-        path: "/wavesurfer",
+        path: "wavesurfer",
         name: "wavesurfer",
         component: () => import("../views/Wavesurfer.vue"),
       },
       {
-        path: "/pagination",
+        path: "pagination",
         name: "pagination",
         component: () => import("../views/Pagination.vue"),
         children: [
@@ -50,9 +50,14 @@ const routes = [
         ],
       },
       {
-        path: "/music",
+        path: "music",
         name: "music",
-        components: () => import("../views/Music.vue"),
+        component: () => import("../views/Music.vue"),
+      },
+      {
+        path: "mySlot",
+        name: "mySlot",
+        component: () => import("../views/MySlot.vue"),
       },
     ],
   },
