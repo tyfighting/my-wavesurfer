@@ -32,6 +32,7 @@ export default {
       timer: null,
       currentTime: 0,
       currentIndex: 0,
+      flagSet:""
     };
   },
   computed: {
@@ -43,6 +44,9 @@ export default {
   },
   watch: {
     currentIndex() {
+      if(this.flagSet){
+        clearInterval(this.flagSet)
+      }
       const parent = document.querySelector(".music-wrapper");
       const child = document.querySelector(".music-content");
       const musicContent = [...document.querySelectorAll(".music-content p")];
@@ -55,7 +59,16 @@ export default {
       if (parent.scrollTop >= child.scrollHeight) {
         parent.scrollTop = 10;
       } else {
-        parent.scrollTop = currentHeight + 10;
+        let flagNum=0
+        this.flagSet=setInterval(()=>{
+          flagNum++
+          if(flagNum==10){
+            clearInterval(this.flagSet)
+            this.flagSet=""
+          }
+          parent.scrollTop = currentHeight + flagNum;
+        },30)
+        
       }
     },
   },
