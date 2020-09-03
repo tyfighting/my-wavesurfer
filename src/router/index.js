@@ -59,6 +59,16 @@ const routes = [
         name: "mySlot",
         component: () => import("../views/MySlot.vue"),
       },
+      {
+        path: "table",
+        name: "table",
+        component: () => import("../views/Table.vue"),
+      },
+      {
+        path: "tableEdit",
+        name: "tableEdit",
+        component: () => import("../views/TableEdit.vue"),
+      },
     ],
   },
   { path: "*", redirect: "/" },

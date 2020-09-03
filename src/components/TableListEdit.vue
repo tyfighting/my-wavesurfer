@@ -1,5 +1,6 @@
 <template>
-  <div :class="[v2_0 ? 'table-wrapper-new' : 'table-wrapper']">
+  <!--    v2_0-->
+  <div class="table-wrapper">
     <slot name="top"></slot>
     <!-- pagination 为否时 是前端分页 -->
     <el-table
@@ -131,7 +132,7 @@
             <template v-else>
               <el-button
                 type="linear"
-                class="success"
+                class="primary"
                 @click="handleEditTable(scope)"
                 :disabled="!!(editStatus && scope.$index !== editIndex)"
                 >编辑</el-button
@@ -159,7 +160,6 @@
     >
     </el-pagination>
     <slot></slot>
-    <t-shape :shape="TShape"></t-shape>
   </div>
 </template>
 
@@ -209,10 +209,6 @@ export default {
       type: Number,
       default: 180,
     },
-    TShape: {
-      type: String,
-      default: "tl,tr,bl,br,hls",
-    },
     loadingData: Boolean,
     maxHeight: String,
   },
@@ -255,6 +251,7 @@ export default {
           ct[cv.prop] = "";
           return ct;
         }, {});
+        console.log(result);
         // this.tableData.splice(0, 0, {})
         this.tableData.unshift(result);
         // 为1时新增状态
@@ -262,12 +259,12 @@ export default {
         this.editIndex = 0;
         this.$nextTick((_) => {
           document.querySelector(`.el-table__row:nth-child(1)`).style.cssText =
-            "transform: scale3d(1, 0, 1);";
+            ";transform: scale3d(1, 0, 1);";
           setTimeout(() => {
             document.querySelector(
               `.el-table__row:nth-child(1)`
             ).style.cssText =
-              "transform: scale3d(1, 1, 1); transition: transform 0.25s ease-in-out; transform-origin: top";
+              ";transform: scale3d(1, 1, 1); transition: transform 0.25s ease-in-out; transform-origin: top";
           }, 0);
         });
       }

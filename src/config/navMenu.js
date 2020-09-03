@@ -29,4 +29,12 @@ export default [
     title: "插槽",
     index: "mySlot",
   },
+  {
+    title: "表格",
+    index: "table",
+  },
+  {
+    title: "表格可编辑",
+    index: "tableEdit",
+  },
 ];

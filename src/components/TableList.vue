@@ -1,52 +1,36 @@
 <template>
-  <div :class="[v2_0 ? 'table-wrapper-new' : 'table-wrapper']">
+  <div class="table">
     <el-table
-      ref="el-table"
-      :data="tableData"
+      stripe
       style="width: 100%"
-      :max-height="maxHeight"
-      :row-class-name="tableRowClassName"
-      :cell-style="cellStyle"
-      header-row-class-name="row-shadow header-row"
-      header-cell-class-name="cell-normal"
-      cell-class-name="cell-normal"
-      @header-click="handleHeaderClick"
-      @selection-change="handleSelectionChange"
-      border
+      height="100%"
+      :data="tableData"
       v-loading="loadingData"
+      @selection-change="handleSelectionChange"
     >
-      <!-- 选择框-->
-      <el-table-column
-        v-if="$selection"
-        type="selection"
-        width="68"
-        align="center"
-      ></el-table-column>
-      <!-- 索引-->
-      <el-table-column v-if="$index" label="序号" width="68" align="center">
-        <template #default="slotProps">
-          {{ slotProps.$index + 1 + (currentPage - 1) * pageSize }}
+      <el-table-column type="selection" width="55" align="center">
+      </el-table-column>
+      <el-table-column label="序号" width="55">
+        <template #default="scope">
+          {{ scope.$index + 1 + (currentPage - 1) * pageSize }}
         </template>
       </el-table-column>
       <!-- 遍历tableColumn列信息 -->
       <el-table-column
-        v-if="tableColumn && tableColumn.length > 0"
         v-for="item in tableColumn"
-        :key="item.label"
-        :prop="item.prop"
-        :label="item.label"
-        :formatter="item.formatter"
-        :width="item.width"
-        :align="item.align || 'center'"
+        :key="item['prop']"
+        :prop="item['prop']"
+        :label="item['label']"
+        :width="item['width']"
+        :align="item['align'] || 'center'"
+        :formatter="item['formatter']"
       >
+        <template #default="scope">
+          <slot :column="scope" name="column"></slot>
+        </template>
       </el-table-column>
       <!-- operation具名作用域插槽 -->
-      <el-table-column
-        v-if="!!$scopedSlots.operation || editable"
-        label="操作"
-        :width="columnOperation"
-        key="operation"
-      >
+      <el-table-column label="操作" :width="columnOperation" key="operation">
         <template #default="scope">
           <slot :operation="scope" name="operation"></slot>
         </template>
@@ -57,12 +41,11 @@
       @current-change="handleCurrentChange"
       :current-page.sync="currentPage"
       :page-size="pageSize"
-      layout="total, prev, pager, next, jumper"
-      :total="totalTableNum"
+      :page-sizes="[10, 15, 20, 25, 30]"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="totalNum"
     >
     </el-pagination>
-    <slot></slot>
-    <t-shape :shape="TShape"></t-shape>
   </div>
 </template>
 
@@ -71,15 +54,10 @@ export default {
   name: "TableList",
   data() {
     return {
-      editStatus: 0,
-      editIndex: 0,
-      arithmeticType: "",
-      arithmeticName: "",
       currentPage: 1,
     };
   },
   props: {
-    v2_0: Boolean,
     tableData: {
       type: Array,
       default() {
@@ -92,18 +70,10 @@ export default {
         return [];
       },
     },
-    $index: Boolean,
-    $selection: Boolean,
-    editable: Boolean,
-    showPagination: {
-      type: Boolean,
-      default: true,
-    },
-    totalTableNum: {
+    totalNum: {
       type: Number,
       default: 0,
     },
-    cellStyle: Function,
     pageSize: {
       type: Number,
       default: 20,
@@ -112,12 +82,7 @@ export default {
       type: Number,
       default: 180,
     },
-    TShape: {
-      type: String,
-      default: "tl,tr,bl,br,hls",
-    },
     loadingData: Boolean,
-    maxHeight: String,
   },
   methods: {
     handleSelectionChange(selection) {

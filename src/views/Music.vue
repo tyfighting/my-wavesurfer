@@ -73,6 +73,7 @@ export default {
     handleClick(index) {
       this.clearTimer();
       this.currentIndex = index;
+      this.updateCurrent();
       this.currentTime = Number(this.time[index].split(" ")[0]);
       this.timer = setInterval(this.updateCurrent, 1000);
     },
