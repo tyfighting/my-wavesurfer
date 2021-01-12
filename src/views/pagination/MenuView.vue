@@ -1,7 +1,7 @@
 <template>
   <div class="menu-view">
     <p>1111</p>
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tabs v-model="activeName" @before-leave="handleClick">
       <el-tab-pane label="详细" name="menuDetail"></el-tab-pane>
       <el-tab-pane label="信息" name="menuInfo"></el-tab-pane>
     </el-tabs>
@@ -20,11 +20,11 @@ export default {
     };
   },
   methods: {
-    handleClick(value) {
-      console.log(this.activeName, value.name);
+    handleClick(activeName, oldActiveName) {
+      console.log(activeName, oldActiveName);
       // if (this.activeName !== value.name) {
-      this.activeName = value.name;
-      this.$router.push({ name: value.name });
+      // this.activeName = value.name;
+      this.$router.push({ name: activeName });
       // }
     },
   },

@@ -15,6 +15,7 @@
       <el-button type="primary" @click="changeChannel(2)">右声道</el-button>
       <el-button type="primary" @click="changeChannel(0)">正常播放</el-button>
       <el-button type="primary" @click="handlePause">暂停</el-button>
+      <el-button type="primary" @click="handleCut()">剪切</el-button>
     </div>
   </div>
 </template>
@@ -42,9 +43,6 @@ export default {
         { start: 60, end: 70 },
         { start: 100, end: 120 },
       ],
-      leftFlag: 0, //左声道播放到第几个
-      rightFlag: 0, //右声道播放到第几个
-      type: 0,
 
       // 方式一：
       left_data: null,
@@ -76,19 +74,6 @@ export default {
         progressColor: "purple",
         fillParent: true,
         splitChannels: true,
-        // splitChannelsOptions: {
-        //   overlay: false,
-        //   channelColors: {
-        //     0: {
-        //       progressColor: "green",
-        //       waveColor: "pink",
-        //     },
-        //     1: {
-        //       progressColor: "orange",
-        //       waveColor: "purple",
-        //     },
-        //   },
-        // },
         plugins: [
           // 光标插件
           Regions.create({
@@ -133,14 +118,9 @@ export default {
         this.right_zeros = this.right_data.map((d) => {
           return 0;
         });
-        console.log(
-          "ready",
-          this.left_data,
-          this.left_zeros,
-          this.right_data,
-          this.right_zeros
-        );
-
+        console.log("ready", this.wavesurfer.backend.buffer.numberOfChannels);
+        this.wavesurfer.regions.list.region.update({ start: 10 });
+        this.wavesurfer.regions.list.region.update({ end: 100 });
         // // 方式二：
         // const splitter = this.wavesurfer.backend.ac.createChannelSplitter(2);
         // console.log(splitter);
@@ -155,34 +135,61 @@ export default {
       });
       this.wavesurfer.on("audioprocess", (value) => {
         this.currentTime = parseInt(value);
-        // if (this.type === 1) {
-        //   if (this.currentTime == this.leftChannle[this.leftFlag]["end"]) {
-        //     if (this.leftFlag == this.leftChannle.length - 1) {
-        //       this.wavesurfer.pause();
-        //       return;
-        //     }
-        //     this.leftFlag++;
-        //     this.wavesurfer.play(this.leftChannle[this.leftFlag]["start"]);
-        //   }
-        // } else if (this.type === 2) {
-        //   if (this.currentTime == this.rightChannle[this.rightFlag]["end"]) {
-        //     if (this.rightFlag == this.rightChannle.length - 1) {
-        //       this.wavesurfer.pause();
-        //       return;
-        //     }
-        //     this.rightFlag++;
-        //     this.wavesurfer.play(this.rightChannle[this.rightFlag]["start"]);
-        //   }
-        // }
       });
     },
     handlePause() {
       this.wavesurfer.playPause();
     },
+    handleCut() {
+      var originalBuffer = this.wavesurfer.backend.buffer;
+      console.log(originalBuffer);
+      var emptySegment = this.wavesurfer.backend.ac.createBuffer(
+        originalBuffer.numberOfChannels,
+        originalBuffer.length,
+        originalBuffer.sampleRate
+      );
+      for (var i = 0; i < originalBuffer.numberOfChannels; i++) {
+        var chanData = originalBuffer.getChannelData(i);
+        var segmentChanData = emptySegment.getChannelData(i);
+        for (var j = 0, len = chanData.length; j < len; j++) {
+          segmentChanData[j] = chanData[j];
+        }
+      }
+      console.log(emptySegment);
+    },
+    handleCut1() {
+      const instance = this.wavesurfer;
+      const selection = instance.regions.list.region;
+      console.log(selection);
+      let original_buffer = instance.backend.buffer;
+      let new_buffer = instance.backend.ac.createBuffer(
+        original_buffer.numberOfChannels,
+        original_buffer.length,
+        original_buffer.sampleRate
+      );
+
+      const first_list_index = selection.start * original_buffer.sampleRate;
+      const second_list_index = selection.end * original_buffer.sampleRate;
+      const second_list_mem_alloc =
+        original_buffer.length - selection.end * original_buffer.sampleRate;
+
+      const new_list = new Float32Array(parseInt(first_list_index));
+      const second_list = new Float32Array(parseInt(second_list_mem_alloc));
+      let combined = new Float32Array(original_buffer.length);
+
+      original_buffer.copyFromChannel(new_list, 0);
+      original_buffer.copyFromChannel(second_list, 0, second_list_index);
+
+      combined.set(new_list);
+      combined.set(second_list, first_list_index);
+
+      new_buffer.copyToChannel(combined, 0);
+
+      instance.loadDecodedBuffer(new_buffer);
+      // selection.end = selection.start;
+      selection.update({ end: selection.start });
+    },
     changeChannel(value) {
-      this.leftFlag = 0;
-      this.rightFlag = 0;
-      this.type = value;
       if (value === 0) {
         this.currentTime = 0;
         this.wavesurfer.play();
@@ -190,43 +197,27 @@ export default {
         //方式一：
         this.wavesurfer.backend.buffer.copyToChannel(this.left_data, 1);
         this.wavesurfer.backend.buffer.copyToChannel(this.right_data, 1);
-        // console.log(
-        //   "双声道",
-        //   this.wavesurfer.backend.buffer.getChannelData(0),
-        //   this.wavesurfer.backend.buffer.getChannelData(1)
-        // );
+        // console.log("双声道");
       } else if (value === 1) {
         // 左声道
-        // const start = this.leftChannle[this.leftFlag]["start"];
-        // this.currentTime = start;
         this.wavesurfer.play();
 
         // 方式一：
         this.wavesurfer.backend.buffer.copyToChannel(this.left_data, 0);
         this.wavesurfer.backend.buffer.copyToChannel(this.right_zeros, 1);
-        console.log(
-          "左声道",
-          this.wavesurfer.backend.buffer.getChannelData(0),
-          this.wavesurfer.backend.buffer.getChannelData(1)
-        );
+        console.log("左声道");
 
         // if (this.stateLeft == 1) this.stateLeft = 0;
         // else this.stateLeft = 1;
         // this.leftGain.gain.value = this.stateLeft;
       } else if (value === 2) {
         // // 右声道
-        // const start = this.rightChannle[this.rightFlag]["start"];
-        // this.currentTime = start;
         this.wavesurfer.play();
 
         // 方式一：
         this.wavesurfer.backend.buffer.copyToChannel(this.left_zeros, 0);
         this.wavesurfer.backend.buffer.copyToChannel(this.right_data, 1);
-        console.log(
-          "右声道",
-          this.wavesurfer.backend.buffer.getChannelData(0),
-          this.wavesurfer.backend.buffer.getChannelData(1)
-        );
+        console.log("右声道");
 
         // if (this.stateRight == 1) this.stateRight = 0;
         // else this.stateRight = 1;

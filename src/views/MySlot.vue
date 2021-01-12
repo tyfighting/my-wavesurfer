@@ -2,7 +2,10 @@
   <div>
     <div class="item">
       <p>navigation-link：</p>
-      <navigation-link url="/profile"> Your Profile {{ url }}</navigation-link>
+      <navigation-link url="/profile">
+        <span class="fa fa-user"></span>
+        Your Profile {{ url }}
+      </navigation-link>
     </div>
     <div class="item">
       <p>base-layout：</p>
@@ -12,8 +15,8 @@
         </template>
         <template #default>
           <p>A paragraph for the main content.</p>
-          <p>And another one.</p></template
-        >
+          <p>And another one.</p>
+        </template>
         <template #footer>
           <p>Here's some contact info</p>
         </template>
@@ -21,23 +24,8 @@
     </div>
     <div class="item">
       <p>current-user：</p>
-      <current-user #default="user"> {{ user }}</current-user>
+      <current-user #default="user">{{ user }}</current-user>
     </div>
-    <el-select
-      v-model="value2"
-      multiple
-      collapse-tags
-      style="margin-left: 20px;"
-      placeholder="请选择"
-    >
-      <el-option
-        v-for="item in options"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      >
-      </el-option>
-    </el-select>
   </div>
 </template>
 
@@ -49,7 +37,7 @@ export default {
   name: "mySlot",
   data() {
     return {
-      url: "/profile",
+      url: "/url",
     };
   },
   components: {

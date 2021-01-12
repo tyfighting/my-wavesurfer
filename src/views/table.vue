@@ -8,25 +8,48 @@
       default-expand-all
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     >
-      <el-table-column prop="date" label="时间" sortable width="240">
-      </el-table-column>
-      <el-table-column prop="name" label="姓名" sortable width="180">
-      </el-table-column>
-      <el-table-column prop="address" label="指令"> </el-table-column>
-      <!-- <el-table-column label="操作">
+      <!-- @cell-mouse-enter="handleEnter" @cell-mouse-leave="handleLeave" -->
+      <el-table-column
+        prop="date"
+        label="时间"
+        sortable
+        width="240"
+      ></el-table-column>
+      <el-table-column
+        prop="name"
+        label="姓名"
+        sortable
+        width="180"
+      ></el-table-column>
+      <el-table-column prop="address" label="指令"></el-table-column>
+      <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button
-          >
           <el-button
             size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
-            >删除</el-button
+            @mouseenter.native="handleEnter(scope.$index, scope.row)"
+            @mouseleave="handleLeave(scope.$index, scope.row)"
           >
+            编辑
+          </el-button>
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :modal="false"
+    >
+      <!-- close-on-click-modal
+      close-on-press-escape -->
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">
+          确 定
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -99,11 +122,14 @@ export default {
       totalTableNum: 0,
       pageSize: 10,
       loadingData: false,
+      dialogVisible: false,
     };
   },
   methods: {
-    handleEdit() {},
-    handleDelete() {},
+    handleEnter(index, row) {
+      this.dialogVisible = true;
+    },
+    handleClose() {},
   },
 };
 </script>

@@ -45,3 +45,18 @@ export const tableListMixin = {
     },
   },
 };
+export const testMixin = {
+  data() {
+    return {
+      msg: "hello!mixin",
+    };
+  },
+  methods: {
+    hello() {
+      console.log("hello!mixin");
+    },
+  },
+  created() {
+    this.hello();
+  },
+};

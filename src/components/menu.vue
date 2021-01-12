@@ -1,10 +1,15 @@
 <template>
   <transition name="el-zoom-in-bottom">
     <div class="menu">
-      <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+      <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
         <el-radio-button :label="false">展开</el-radio-button>
         <el-radio-button :label="true">收起</el-radio-button>
-      </el-radio-group>
+      </el-radio-group> -->
+      <el-switch
+        v-model="isCollapse"
+        active-color="#13ce66"
+        inactive-color="#ff4949"
+      ></el-switch>
       <el-menu
         :default-active="currentActive"
         class="el-menu-vertical-demo"
