@@ -51,7 +51,7 @@ export default {
 			this.myChart = echarts.init(this.$refs['main']);
 			console.log(usaJson.features.length);
 			usaJson.features.map((item, index) => {
-				item.id = index + '';
+				item.id = index + 1 + '';
 				item.geometry.coordinates.map(arr => {
 					arr.map((geo, number) => {
 						if (typeof geo === 'object') {
